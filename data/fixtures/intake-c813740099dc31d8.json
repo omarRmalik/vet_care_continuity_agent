@@ -1,0 +1,23 @@
+{
+  "kind": "intake",
+  "model": "claude-opus-5",
+  "recorded_at": "2026-09-12T15:28:18.364984+00:00",
+  "output": {
+    "observation_updates": {
+      "appetite": "unknown",
+      "drinking": "unknown",
+      "medication_given": "unknown",
+      "incision_bleeding": "unknown",
+      "incision_swelling": "none",
+      "incision_discharge": "none",
+      "incision_open": "unknown",
+      "breathing": "normal",
+      "demeanor": "normal",
+      "pain_signs": "none",
+      "vomiting_count": 0
+    },
+    "next_question": null,
+    "done": true,
+    "rationale": "Owner reports normal breathing, comfort, no vomiting, usual demeanour, and a clean closed incision with no swelling or discharge; sufficient for day 1 review."
+  }
+}

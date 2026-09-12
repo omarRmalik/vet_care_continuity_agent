@@ -1,0 +1,88 @@
+# Deterministic post-operative triage rules.
+#
+# ILLUSTRATIVE ONLY. Escalation rules for a real system must be written and validated
+# by veterinary professionals. These exist to demonstrate that the escalation decision
+# is made by auditable configuration, not by a language model.
+#
+# Every value is quoted on purpose: unquoted `yes` / `no` are YAML booleans and would
+# never compare equal to the string enums in Observation.
+
+config:
+  # When true, a safety-critical field still `unknown` after the agent has exhausted
+  # its question budget downgrades the case to REVIEW rather than passing as NORMAL.
+  # Off by default; flip for a stricter posture.
+  escalate_on_unknown: false
+  safety_critical_fields:
+    - incision_bleeding
+    - breathing
+    - incision_open
+    - pain_signs
+
+rules:
+  # --- URGENT: immediate escalation per the clinic's procedure -----------------
+  - id: R-URG-01
+    field: incision_bleeding
+    equals: "heavy"
+    level: URGENT
+    reason: "Heavy bleeding at surgical site"
+
+  - id: R-URG-02
+    field: breathing
+    equals: "labored"
+    level: URGENT
+    reason: "Laboured breathing"
+
+  - id: R-URG-03
+    field: incision_open
+    equals: "yes"
+    level: URGENT
+    reason: "Incision open / dehiscence"
+
+  - id: R-URG-04
+    field: pain_signs
+    equals: "severe"
+    level: URGENT
+    reason: "Signs of severe pain"
+
+  # --- REVIEW: create a task for veterinary staff ------------------------------
+  - id: R-REV-01
+    field: incision_swelling
+    equals: "increasing"
+    level: REVIEW
+    reason: "Increasing surgical-site swelling"
+
+  - id: R-REV-02
+    field: incision_discharge
+    in: ["yellow", "green"]
+    level: REVIEW
+    reason: "Purulent discharge from incision"
+
+  - id: R-REV-03
+    field: appetite
+    equals: "none"
+    level: REVIEW
+    reason: "Not eating"
+
+  - id: R-REV-04
+    field: drinking
+    equals: "none"
+    level: REVIEW
+    reason: "Not drinking"
+
+  - id: R-REV-05
+    field: vomiting_count
+    gte: 3
+    level: REVIEW
+    reason: "Repeated vomiting"
+
+  - id: R-REV-06
+    field: medication_given
+    equals: "no"
+    level: REVIEW
+    reason: "Prescribed medication not administered"
+
+  - id: R-REV-07
+    field: demeanor
+    in: ["lethargic", "distressed"]
+    level: REVIEW
+    reason: "Abnormal demeanour"

@@ -1,0 +1,23 @@
+{
+  "kind": "intake",
+  "model": "claude-opus-5",
+  "recorded_at": "2026-09-12T15:28:15.310979+00:00",
+  "output": {
+    "observation_updates": {
+      "appetite": "unknown",
+      "drinking": "unknown",
+      "medication_given": "unknown",
+      "incision_bleeding": "none",
+      "incision_swelling": "unknown",
+      "incision_discharge": "unknown",
+      "incision_open": "no",
+      "breathing": "unknown",
+      "demeanor": "unknown",
+      "pain_signs": "unknown",
+      "vomiting_count": null
+    },
+    "next_question": "That's really helpful, thank you. Last thing \u2014 is Bella breathing comfortably at rest, settling without any crying or guarding, and has she been herself today with no vomiting?",
+    "done": false,
+    "rationale": "Owner reported clean, closed incision with no bleeding, no swelling and no discharge; remaining safety items (breathing, pain, demeanor, vomiting) combined into one question as recovery appears uneventful."
+  }
+}

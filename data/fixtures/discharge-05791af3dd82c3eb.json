@@ -1,0 +1,15 @@
+{
+  "kind": "discharge",
+  "model": "claude-opus-5",
+  "recorded_at": "2026-09-12T15:27:59.940734+00:00",
+  "output": {
+    "paragraphs": [
+      "Bella had surgery on 12 September 2026 to remove a mass. She did her part today, and now she needs some quiet time at home to heal. Below is what you need to do for her.",
+      "Bella has been prescribed Carprofen 75 mg, given twice daily. Please follow the label on the bottle and the instructions your veterinarian gave you. If you have any questions about her medicine, call the practice before making any changes.",
+      "Bella must not run for 10 days. Keep her calm and quiet indoors. Short, slow lead walks only for toilet breaks, and no jumping, rough play or stairs where you can avoid them.",
+      "Keep Bella's incision dry. That means no baths, no swimming, and no letting her out in wet grass or rain without keeping the area dry. If it does get wet, let the practice know.",
+      "Check the surgical site once or twice a day. A little swelling is expected and normal. But if the swelling gets worse, looks larger, or you are worried about how it looks, contact the practice.",
+      "Bella needs a recheck appointment in 10 to 14 days. Please call to book this so we can make sure she is healing well."
+    ]
+  }
+}

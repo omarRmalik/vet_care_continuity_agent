@@ -1,0 +1,23 @@
+{
+  "kind": "intake",
+  "model": "claude-opus-5",
+  "recorded_at": "2026-09-12T15:28:37.514205+00:00",
+  "output": {
+    "observation_updates": {
+      "appetite": "unknown",
+      "drinking": "unknown",
+      "medication_given": "unknown",
+      "incision_bleeding": "heavy",
+      "incision_swelling": "unknown",
+      "incision_discharge": "unknown",
+      "incision_open": "unknown",
+      "breathing": "unknown",
+      "demeanor": "unknown",
+      "pain_signs": "unknown",
+      "vomiting_count": null
+    },
+    "next_question": "Thank you for letting me know \u2014 when you look at Bella, can you tell me whether the incision itself has any gap or opening, how her breathing seems at rest, and whether she's showing any signs of discomfort like crying or not settling?",
+    "done": false,
+    "rationale": "Heavy bleeding reported; asked one combined question covering remaining safety-critical items."
+  }
+}

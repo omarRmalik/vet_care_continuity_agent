@@ -1,0 +1,23 @@
+{
+  "kind": "intake",
+  "model": "claude-opus-5",
+  "recorded_at": "2026-09-12T15:28:21.335344+00:00",
+  "output": {
+    "observation_updates": {
+      "appetite": "unknown",
+      "drinking": "unknown",
+      "medication_given": "unknown",
+      "incision_bleeding": "unknown",
+      "incision_swelling": "unknown",
+      "incision_discharge": "unknown",
+      "incision_open": "unknown",
+      "breathing": "unknown",
+      "demeanor": "unknown",
+      "pain_signs": "unknown",
+      "vomiting_count": null
+    },
+    "next_question": "When you look at the incision right now, what do you see \u2014 any bleeding, or any gap or opening in the skin?",
+    "done": false,
+    "rationale": "Owner's description is vague, so asking one narrow question about what is visible at the incision."
+  }
+}

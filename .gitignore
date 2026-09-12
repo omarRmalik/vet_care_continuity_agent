@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+state.json
+.env
+
+# Superseded fixture recordings from development. The 11 live recordings in
+# data/fixtures/ ARE committed — they are what makes the demo run without an API key.
+data/fixtures/_superseded/

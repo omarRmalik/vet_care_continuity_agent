@@ -1,0 +1,23 @@
+{
+  "kind": "intake",
+  "model": "claude-opus-5",
+  "recorded_at": "2026-09-12T15:28:25.604588+00:00",
+  "output": {
+    "observation_updates": {
+      "appetite": "unknown",
+      "drinking": "unknown",
+      "medication_given": "unknown",
+      "incision_bleeding": "unknown",
+      "incision_swelling": "unknown",
+      "incision_discharge": "unknown",
+      "incision_open": "unknown",
+      "breathing": "unknown",
+      "demeanor": "unknown",
+      "pain_signs": "unknown",
+      "vomiting_count": null
+    },
+    "next_question": "Thanks for looking. Compared with yesterday, does that swelling look bigger, about the same, or smaller?",
+    "done": false,
+    "rationale": "Owner reports swelling but has not described bleeding, opening, or change since yesterday, so swelling severity stays unknown pending clarification."
+  }
+}

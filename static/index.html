@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Care Continuity — Bella</title>
+  <style>
+    :root {
+      --bg:#f5f6f8; --panel:#fff; --ink:#15181c; --muted:#6b7280; --line:#e2e5ea;
+      --accent:#2563eb; --accent-ink:#fff;
+      --ok-bg:#e8f5ec; --ok-ink:#17603a; --ok-line:#bfe0cc;
+      --warn-bg:#fdf3e3; --warn-ink:#8a5a10; --warn-line:#f0dcb6;
+      --urgent-bg:#fdeaea; --urgent-ink:#9b1c1c; --urgent-line:#f3c6c6;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);
+         font:14px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+    header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+           padding:12px 20px;background:var(--panel);border-bottom:1px solid var(--line);
+           position:sticky;top:0;z-index:10}
+    header h1{font-size:15px;margin:0;font-weight:650}
+    header .sub{color:var(--muted)}
+    header .spacer{flex:1}
+    .chip{font-size:11px;font-weight:650;letter-spacing:.04em;text-transform:uppercase;
+          padding:3px 9px;border-radius:999px;border:1px solid var(--line);background:#eef1f5;
+          color:var(--muted)}
+    .chip.ok{background:var(--ok-bg);color:var(--ok-ink);border-color:var(--ok-line)}
+    .chip.warn{background:var(--warn-bg);color:var(--warn-ink);border-color:var(--warn-line)}
+    .chip.urgent{background:var(--urgent-bg);color:var(--urgent-ink);border-color:var(--urgent-line)}
+
+    .panes{display:grid;grid-template-columns:1.15fr 1fr;gap:16px;padding:16px 20px;align-items:start}
+    .pane{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:16px}
+    .pane > h2, .timeline > h2{font-size:11px;text-transform:uppercase;letter-spacing:.07em;
+                               color:var(--muted);margin:0 0 14px;font-weight:650}
+    .step{border-top:1px solid var(--line);padding-top:14px;margin-top:14px}
+    .step:first-of-type{border-top:0;padding-top:0;margin-top:0}
+    .step h3{font-size:12px;margin:0 0 10px;font-weight:650;color:var(--muted)}
+    label{display:block;font-size:11px;font-weight:650;color:var(--muted);margin:10px 0 4px;
+          text-transform:uppercase;letter-spacing:.04em}
+    textarea,input[type=text]{width:100%;font:13px/1.5 ui-monospace,"Cascadia Mono",Consolas,monospace;
+      padding:8px 9px;border:1px solid var(--line);border-radius:6px;background:#fcfcfd;color:var(--ink)}
+    textarea{resize:vertical}
+    textarea:focus,input:focus{outline:2px solid #bcd2fb;outline-offset:-1px;border-color:var(--accent)}
+    button{font:inherit;font-weight:600;padding:8px 14px;border-radius:6px;border:1px solid var(--accent);
+           background:var(--accent);color:var(--accent-ink);cursor:pointer}
+    button.secondary{background:#fff;color:var(--ink);border-color:var(--line)}
+    button:disabled{opacity:.5;cursor:not-allowed}
+    .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px}
+
+    table.meds{width:100%;border-collapse:collapse;margin-top:4px}
+    table.meds th{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);
+                  text-align:left;font-weight:650;padding:4px 4px}
+    table.meds td{padding:2px 4px 2px 0}
+    table.meds input{font-size:12px;padding:6px 7px}
+    .icon-btn{background:#fff;border:1px solid var(--line);color:var(--muted);padding:5px 9px;font-weight:600}
+
+    .badge{display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border-radius:6px;
+           font-size:12px;font-weight:600;border:1px solid}
+    .badge.ok{background:var(--ok-bg);color:var(--ok-ink);border-color:var(--ok-line)}
+    .badge.warn{background:var(--warn-bg);color:var(--warn-ink);border-color:var(--warn-line)}
+    .discharge p{background:#fbfcfd;border:1px solid var(--line);border-left:3px solid #cfd8e3;
+                 padding:10px 12px;border-radius:0 6px 6px 0;margin:8px 0}
+
+    .timeline{margin:0 20px 24px;background:var(--panel);border:1px solid var(--line);
+              border-radius:9px;padding:16px}
+    .tl-item{display:grid;grid-template-columns:88px 1fr;gap:12px;padding:8px 0;
+             border-top:1px solid #f0f2f5}
+    .tl-item:first-of-type{border-top:0}
+    .tl-when{color:var(--muted);font-size:12px}
+    .tl-label{font-weight:600}
+    .tl-detail{color:var(--muted);font-size:12.5px}
+    .tl-item.review .tl-label{color:var(--warn-ink)}
+    .tl-item.urgent .tl-label{color:var(--urgent-ink)}
+
+    .alert{border:1px solid;border-radius:7px;padding:11px 13px;margin-top:10px}
+    .alert.review{background:var(--warn-bg);border-color:var(--warn-line)}
+    .alert.urgent{background:var(--urgent-bg);border-color:var(--urgent-line)}
+    .alert h4{margin:0 0 6px;font-size:12.5px;letter-spacing:.03em}
+    .alert ul{margin:6px 0 0 16px;padding:0}
+    .alert .rules{font:11px ui-monospace,Consolas,monospace;color:var(--muted);margin-top:7px}
+
+    .chat{max-height:330px;overflow-y:auto;padding:2px;margin-bottom:4px}
+    .msg{margin:8px 0;display:flex}
+    .msg.owner{justify-content:flex-end}
+    .bubble{max-width:80%;padding:8px 11px;border-radius:13px;font-size:13px;line-height:1.5}
+    .msg.agent .bubble{background:#eef2f7;border:1px solid var(--line);border-bottom-left-radius:3px}
+    .msg.owner .bubble{background:var(--accent);color:#fff;border-bottom-right-radius:3px}
+    .quick{font-size:11.5px;padding:5px 10px;background:#fff;color:var(--muted);
+           border:1px dashed var(--line);font-weight:500;text-align:left}
+    .quick:hover{border-style:solid;color:var(--ink)}
+    .outcome{margin-top:10px;padding:9px 12px;border-radius:6px;font-size:12.5px;border:1px solid}
+    .outcome.normal{background:var(--ok-bg);color:var(--ok-ink);border-color:var(--ok-line)}
+    .outcome.review{background:var(--warn-bg);color:var(--warn-ink);border-color:var(--warn-line)}
+    .outcome.urgent{background:var(--urgent-bg);color:var(--urgent-ink);border-color:var(--urgent-line)}
+    .outcome code{font:11px ui-monospace,Consolas,monospace;background:rgba(0,0,0,.06);
+                  padding:1px 5px;border-radius:3px}
+    .slots{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+    .slot{font:11px ui-monospace,Consolas,monospace;background:#eef1f5;border:1px solid var(--line);
+          padding:2px 7px;border-radius:4px;color:var(--muted)}
+    .slot b{color:var(--ink);font-weight:600}
+    .placeholder{color:var(--muted);font-style:italic}
+    .err{background:var(--urgent-bg);border:1px solid var(--urgent-line);color:var(--urgent-ink);
+         padding:10px 12px;border-radius:6px;margin:0 20px 12px;font-size:13px}
+    .hidden{display:none !important}
+    .spin{display:inline-block;width:11px;height:11px;border:2px solid currentColor;
+          border-right-color:transparent;border-radius:50%;animation:sp .7s linear infinite;
+          vertical-align:-1px;margin-right:6px}
+    @keyframes sp{to{transform:rotate(360deg)}}
+    @media (max-width:900px){.panes{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="patient-name">Care Continuity</h1>
+    <span class="sub" id="patient-sub">loading…</span>
+    <span class="spacer"></span>
+    <span class="chip" id="chip-day">Day —</span>
+    <span class="chip" id="chip-stage">—</span>
+    <span class="chip" id="chip-risk">—</span>
+    <span class="chip hidden" id="chip-offline">offline</span>
+    <button class="secondary" id="btn-reset">Reset</button>
+  </header>
+
+  <div class="err hidden" id="error"></div>
+
+  <div class="panes">
+    <!-- ------------------------------------------------ VET ------------------ -->
+    <section class="pane">
+      <h2>Veterinary console</h2>
+
+      <div class="step" id="step-notes">
+        <h3>1 · Clinical notes</h3>
+        <textarea id="notes" rows="8" placeholder="Type or dictate the visit notes…"></textarea>
+        <div class="row">
+          <button id="btn-draft">Generate draft SOAP</button>
+          <button class="secondary" id="btn-example">Load example notes</button>
+        </div>
+      </div>
+
+      <div class="step hidden" id="step-soap">
+        <h3>2 · Draft SOAP note — review and edit before approving</h3>
+        <label for="s">Subjective</label><textarea id="s" rows="3"></textarea>
+        <label for="o">Objective</label><textarea id="o" rows="3"></textarea>
+        <label for="a">Assessment</label><textarea id="a" rows="3"></textarea>
+
+        <label>Plan · medications</label>
+        <table class="meds">
+          <thead><tr><th>Drug</th><th>Dose</th><th>Frequency</th><th>Duration</th><th></th></tr></thead>
+          <tbody id="meds"></tbody>
+        </table>
+        <div class="row"><button class="icon-btn" id="btn-add-med">+ Add medication</button></div>
+
+        <label for="activity">Plan · activity restrictions (one per line)</label>
+        <textarea id="activity" rows="2"></textarea>
+        <label for="wound">Plan · wound care (one per line)</label>
+        <textarea id="wound" rows="2"></textarea>
+        <label for="monitoring">Plan · monitoring (one per line)</label>
+        <textarea id="monitoring" rows="2"></textarea>
+        <label for="recheck">Plan · recheck</label>
+        <input type="text" id="recheck">
+
+        <div class="row">
+          <button id="btn-approve">Approve &amp; generate discharge</button>
+          <span class="placeholder">Nothing reaches the owner until you approve.</span>
+        </div>
+      </div>
+
+      <div class="step hidden" id="step-alerts">
+        <h3>Open alerts</h3>
+        <div id="alerts"></div>
+      </div>
+    </section>
+
+    <!-- ---------------------------------------------- OWNER ------------------ -->
+    <section class="pane">
+      <h2>Owner — Jane Smith</h2>
+
+      <div class="step hidden" id="step-discharge">
+        <h3>Discharge instructions</h3>
+        <div id="grounding"></div>
+        <div class="discharge" id="discharge"></div>
+      </div>
+
+      <div class="step" id="step-followup">
+        <h3>Post-visit monitoring</h3>
+        <p class="placeholder" id="followup-placeholder">
+          Follow-up conversation appears here once the discharge instructions are approved.
+        </p>
+
+        <div id="chat" class="chat hidden"></div>
+        <div id="outcome"></div>
+
+        <div class="row hidden" id="quick-replies"></div>
+
+        <div class="row hidden" id="chat-input-row">
+          <input type="text" id="reply" placeholder="Type the owner's reply…" style="flex:1">
+          <button id="btn-send">Send</button>
+        </div>
+
+        <div class="row">
+          <button class="secondary" id="btn-start">Start check-in</button>
+          <button class="secondary" id="btn-advance">Advance one day</button>
+          <span class="sub" id="next-followup"></span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="timeline">
+    <h2>Patient timeline</h2>
+    <div id="timeline"><p class="placeholder">No events yet.</p></div>
+  </section>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let soapLoaded = false;   // never re-render the editor over the vet's edits
+
+// ---------------------------------------------------------------- networking
+async function api(path, options) {
+  const res = await fetch(path, options);
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(body.detail || `${res.status} ${res.statusText}`);
+  return body;
+}
+function showError(msg) { $('error').textContent = msg; $('error').classList.remove('hidden'); }
+function clearError() { $('error').classList.add('hidden'); }
+
+async function busy(button, label, fn) {
+  const original = button.innerHTML;
+  button.disabled = true;
+  button.innerHTML = `<span class="spin"></span>${label}`;
+  clearError();
+  try { return await fn(); }
+  catch (e) { showError(e.message); }
+  finally { button.disabled = false; button.innerHTML = original; }
+}
+
+// ------------------------------------------------------------------ render
+function chipClass(level) {
+  return level === 'URGENT' ? 'chip urgent' : level === 'REVIEW' ? 'chip warn' : 'chip ok';
+}
+
+function render(s) {
+  $('patient-name').textContent = `${s.patient.name} · ${s.patient.procedure}`;
+  $('patient-sub').textContent = `${s.patient.age}y ${s.patient.breed} · ${s.patient.weight_kg} kg · owner ${s.patient.owner}`;
+  $('chip-day').textContent = `Day ${s.case.day} · ${s.date}`;
+  $('chip-stage').textContent = s.case.stage.replace(/_/g, ' ');
+  $('chip-risk').textContent = s.case.risk_status;
+  $('chip-risk').className = chipClass(s.case.risk_status);
+  $('chip-offline').classList.toggle('hidden', !s.offline);
+
+  if (s.notes && !$('notes').value) $('notes').value = s.notes;
+
+  if (s.soap && !soapLoaded) { loadSoap(s.approved_soap || s.soap); soapLoaded = true; }
+  $('step-soap').classList.toggle('hidden', !s.soap);
+
+  renderDischarge(s);
+  renderSession(s);
+  renderAlerts(s);
+  renderTimeline(s);
+
+  $('next-followup').textContent = s.case.next_followup
+    ? `Next follow-up scheduled for ${s.case.next_followup}` : '';
+}
+
+function renderSession(s) {
+  const sess = s.session;
+  const ready = !!(s.discharge && s.discharge.paragraphs);
+  $('btn-start').disabled = !ready;
+  $('btn-start').textContent = sess ? `Restart day ${s.case.day} check-in` : 'Start check-in';
+
+  const chat = $('chat');
+  chat.classList.toggle('hidden', !sess);
+  $('chat-input-row').classList.toggle('hidden', !sess || sess.complete);
+  $('outcome').innerHTML = '';
+
+  if (!sess) { $('quick-replies').classList.add('hidden'); return; }
+
+  chat.innerHTML = '';
+  sess.transcript.forEach(t => {
+    const row = document.createElement('div');
+    row.className = `msg ${t.role}`;
+    const b = document.createElement('div');
+    b.className = 'bubble'; b.textContent = t.text;
+    row.appendChild(b); chat.appendChild(row);
+  });
+  chat.scrollTop = chat.scrollHeight;
+
+  // Canned owner replies for the current day, so the demo doesn't depend on typing.
+  const used = new Set(sess.transcript.filter(t => t.role === 'owner').map(t => t.text));
+  const pending = (s.demo_replies || []).filter(r => !used.has(r));
+  const qr = $('quick-replies');
+  qr.innerHTML = '';
+  qr.classList.toggle('hidden', sess.complete || !pending.length);
+  pending.forEach(text => {
+    const b = document.createElement('button');
+    b.className = 'quick'; b.textContent = `“${text}”`;
+    b.onclick = () => { $('reply').value = text; $('btn-send').click(); };
+    qr.appendChild(b);
+  });
+
+  if (!sess.complete) return;
+
+  // Completed: show what the rules engine concluded and which slots produced it.
+  const t = sess.triage;
+  const level = t.level.toLowerCase();
+  const stopped = sess.stop_reason === 'urgent'
+    ? ' Questioning stopped immediately.' : '';
+  const rules = t.fired_rule_ids.length
+    ? t.fired_rule_ids.map(r => `<code>${r}</code>`).join(' ') : '<code>none</code>';
+  const slots = Object.entries(sess.observation)
+    .filter(([, v]) => v !== 'unknown' && v !== null)
+    .map(([k, v]) => `<span class="slot">${k}: <b>${v}</b></span>`).join('');
+
+  $('outcome').innerHTML = `
+    <div class="outcome ${level}">
+      <b>${t.level}</b>${stopped}
+      ${t.reasons.length ? '<ul style="margin:6px 0 0 16px;padding:0">'
+        + t.reasons.map(r => `<li>${r}</li>`).join('') + '</ul>' : ''}
+      <div style="margin-top:7px">rules fired: ${rules}</div>
+      <div class="slots">${slots}</div>
+    </div>`;
+}
+
+function loadSoap(soap) {
+  $('s').value = soap.subjective || '';
+  $('o').value = soap.objective || '';
+  $('a').value = soap.assessment || '';
+  const p = soap.plan || {};
+  $('meds').innerHTML = '';
+  (p.medications || []).forEach(addMedRow);
+  if (!(p.medications || []).length) addMedRow();
+  $('activity').value = (p.activity_restrictions || []).join('\n');
+  $('wound').value = (p.wound_care || []).join('\n');
+  $('monitoring').value = (p.monitoring || []).join('\n');
+  $('recheck').value = p.recheck || '';
+}
+
+function addMedRow(med = {}) {
+  const tr = document.createElement('tr');
+  const cell = (key, ph) => {
+    const td = document.createElement('td');
+    const input = document.createElement('input');
+    input.type = 'text'; input.dataset.key = key;
+    input.value = med[key] || ''; input.placeholder = ph;
+    td.appendChild(input); return td;
+  };
+  tr.appendChild(cell('name', 'Carprofen'));
+  tr.appendChild(cell('dose', '75 mg'));
+  tr.appendChild(cell('frequency', 'twice daily'));
+  tr.appendChild(cell('duration', '—'));
+  const td = document.createElement('td');
+  const del = document.createElement('button');
+  del.className = 'icon-btn'; del.textContent = '×'; del.title = 'Remove';
+  del.onclick = () => tr.remove();
+  td.appendChild(del); tr.appendChild(td);
+  $('meds').appendChild(tr);
+}
+
+const lines = (id) => $(id).value.split('\n').map(x => x.trim()).filter(Boolean);
+
+function collectSoap() {
+  const medications = [...$('meds').querySelectorAll('tr')].map(tr => {
+    const m = {};
+    tr.querySelectorAll('input').forEach(i => { m[i.dataset.key] = i.value.trim() || null; });
+    return m;
+  }).filter(m => m.name);
+  return {
+    subjective: $('s').value, objective: $('o').value, assessment: $('a').value,
+    plan: {
+      medications,
+      activity_restrictions: lines('activity'),
+      wound_care: lines('wound'),
+      monitoring: lines('monitoring'),
+      recheck: $('recheck').value.trim() || null,
+    },
+  };
+}
+
+function renderDischarge(s) {
+  const has = !!(s.discharge && s.discharge.paragraphs);
+  $('step-discharge').classList.toggle('hidden', !has);
+  $('followup-placeholder').classList.toggle('hidden', has);
+  if (!has) return;
+
+  $('discharge').innerHTML = '';
+  s.discharge.paragraphs.forEach(text => {
+    const p = document.createElement('p'); p.textContent = text; $('discharge').appendChild(p);
+  });
+
+  const g = s.grounding || {};
+  const el = $('grounding');
+  if (g.fell_back_to_template) {
+    el.innerHTML = `<span class="badge warn">⚠ Model output rejected after ${g.attempts} attempts —
+      showing the approved plan verbatim</span>`;
+  } else {
+    const retried = g.attempts > 1 ? ` (regenerated once)` : '';
+    el.innerHTML = `<span class="badge ok">✓ Grounded — 0 unverified clinical claims${retried}</span>`;
+  }
+}
+
+function renderAlerts(s) {
+  const alerts = s.alerts || [];
+  $('step-alerts').classList.toggle('hidden', !alerts.length);
+  $('alerts').innerHTML = '';
+  alerts.forEach(a => {
+    const div = document.createElement('div');
+    div.className = `alert ${a.level.toLowerCase()}`;
+    const reasons = a.reasons.map(r => `<li>${r}</li>`).join('');
+    div.innerHTML = `
+      <h4>${s.patient.name.toUpperCase()} — ${a.level === 'URGENT'
+        ? 'URGENT: IMMEDIATE ESCALATION' : 'VETERINARY REVIEW REQUIRED'}</h4>
+      <div>Post-operative day ${a.day}</div>
+      <ul>${reasons}</ul>
+      <div class="rules">fired: ${a.fired_rule_ids.join(', ')}</div>`;
+    const ack = document.createElement('button');
+    ack.className = 'icon-btn'; ack.textContent = 'Acknowledge';
+    ack.style.marginTop = '9px';
+    ack.onclick = () => busy(ack, 'Resolving…', async () =>
+      render(await api(`/api/alerts/${a.alert_id}/resolve`, {method: 'POST'})));
+    div.appendChild(ack);
+    $('alerts').appendChild(div);
+  });
+}
+
+function renderTimeline(s) {
+  const el = $('timeline');
+  if (!s.timeline.length) { el.innerHTML = '<p class="placeholder">No events yet.</p>'; return; }
+  el.innerHTML = '';
+  s.timeline.forEach(e => {
+    const div = document.createElement('div');
+    div.className = 'tl-item' + (e.level === 'URGENT' ? ' urgent' : e.level === 'REVIEW' ? ' review' : '');
+    div.innerHTML = `
+      <div class="tl-when">${e.date}<br><span style="font-size:11px">day ${e.day}</span></div>
+      <div><div class="tl-label">${e.label}</div>
+           ${e.detail ? `<div class="tl-detail">${e.detail}</div>` : ''}</div>`;
+    el.appendChild(div);
+  });
+}
+
+// ------------------------------------------------------------------ actions
+$('btn-example').onclick = async () => {
+  const d = await api('/api/seed-notes');
+  $('notes').value = d.notes;
+};
+
+$('btn-draft').onclick = (ev) => busy(ev.currentTarget, 'Drafting…', async () => {
+  soapLoaded = false;
+  const s = await api('/api/visit/notes', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({text: $('notes').value}),
+  });
+  render(s);
+});
+
+$('btn-approve').onclick = (ev) => busy(ev.currentTarget, 'Generating discharge…', async () => {
+  const s = await api('/api/visit/approve', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({soap: collectSoap()}),
+  });
+  render(s);
+});
+
+$('btn-add-med').onclick = () => addMedRow();
+
+$('btn-start').onclick = (ev) => busy(ev.currentTarget, 'Starting…', async () => {
+  render(await api('/api/followup/start', {method: 'POST',
+    headers: {'Content-Type': 'application/json'}, body: '{}'}));
+});
+
+$('btn-send').onclick = (ev) => busy(ev.currentTarget, 'Thinking…', async () => {
+  const text = $('reply').value.trim();
+  if (!text) return;
+  $('reply').value = '';
+  render(await api('/api/followup/reply', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({text}),
+  }));
+});
+
+$('reply').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') { e.preventDefault(); $('btn-send').click(); }
+});
+
+$('btn-advance').onclick = (ev) => busy(ev.currentTarget, 'Advancing…', async () => {
+  render(await api('/api/clock/advance', {method: 'POST',
+    headers: {'Content-Type': 'application/json'}, body: '{}'}));
+});
+
+$('btn-reset').onclick = async () => {
+  if (!confirm('Clear this case and start over?')) return;
+  soapLoaded = false;
+  $('notes').value = '';
+  const s = await api('/api/reset', {method: 'POST'});
+  $('step-soap').classList.add('hidden');
+  render(s);
+};
+
+// Refresh the read-only regions only, so a poll can never clobber an edit in progress.
+async function poll() {
+  try {
+    const s = await api('/api/state');
+    $('chip-day').textContent = `Day ${s.case.day} · ${s.date}`;
+    $('chip-stage').textContent = s.case.stage.replace(/_/g, ' ');
+    $('chip-risk').textContent = s.case.risk_status;
+    $('chip-risk').className = chipClass(s.case.risk_status);
+    renderSession(s); renderAlerts(s); renderTimeline(s);
+  } catch (e) { /* transient; the next tick will retry */ }
+}
+
+api('/api/state').then(render).catch(e => showError(e.message));
+setInterval(poll, 2000);
+</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "kind": "intake",
+  "model": "claude-opus-5",
+  "recorded_at": "2026-09-12T15:28:34.562587+00:00",
+  "output": {
+    "observation_updates": {
+      "appetite": "unknown",
+      "drinking": "unknown",
+      "medication_given": "unknown",
+      "incision_bleeding": "none",
+      "incision_swelling": "unknown",
+      "incision_discharge": "unknown",
+      "incision_open": "no",
+      "breathing": "normal",
+      "demeanor": "unknown",
+      "pain_signs": "none",
+      "vomiting_count": null
+    },
+    "next_question": null,
+    "done": true,
+    "rationale": "Owner confirmed no bleeding, incision closed, normal breathing and no pain signs; safety-critical items resolved alongside previously recorded increasing swelling and yellow discharge."
+  }
+}

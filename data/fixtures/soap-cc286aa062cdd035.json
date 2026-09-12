@@ -1,0 +1,30 @@
+{
+  "kind": "soap",
+  "model": "claude-opus-5",
+  "recorded_at": "2026-09-12T15:27:52.888427+00:00",
+  "output": {
+    "subjective": "Bella, a 6-year-old female Golden Retriever (28.4 kg), presented for removal of a small mass from the left shoulder on 2026-09-12. No additional history reported in the notes.",
+    "objective": "Small mass removed from the left shoulder. Procedure proceeded normally. No further examination findings, vital parameters or diagnostics recorded in the notes.",
+    "assessment": "Status post removal of a small left shoulder mass. Procedure uneventful; mild swelling expected. No histopathology result or further diagnosis stated in the notes.",
+    "plan": {
+      "medications": [
+        {
+          "name": "Carprofen",
+          "dose": "75 mg",
+          "frequency": "twice daily",
+          "duration": null
+        }
+      ],
+      "activity_restrictions": [
+        "No running for 10 days."
+      ],
+      "wound_care": [
+        "Keep incision dry."
+      ],
+      "monitoring": [
+        "Monitor for swelling at the surgical site; mild swelling expected."
+      ],
+      "recheck": "10-14 days"
+    }
+  }
+}

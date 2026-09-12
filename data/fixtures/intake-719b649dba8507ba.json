@@ -1,0 +1,23 @@
+{
+  "kind": "intake",
+  "model": "claude-opus-5",
+  "recorded_at": "2026-09-12T15:28:28.776424+00:00",
+  "output": {
+    "observation_updates": {
+      "appetite": "unknown",
+      "drinking": "unknown",
+      "medication_given": "unknown",
+      "incision_bleeding": "unknown",
+      "incision_swelling": "increasing",
+      "incision_discharge": "unknown",
+      "incision_open": "unknown",
+      "breathing": "unknown",
+      "demeanor": "unknown",
+      "pain_signs": "unknown",
+      "vomiting_count": null
+    },
+    "next_question": "Thank you \u2014 one more look for me: is there any bleeding or any gap or opening in the skin, and is Bella breathing comfortably and showing any signs of pain like crying or guarding the area?",
+    "done": false,
+    "rationale": "Swelling increasing since yesterday recorded; combined safety-critical question covering bleeding, incision integrity, breathing and pain."
+  }
+}

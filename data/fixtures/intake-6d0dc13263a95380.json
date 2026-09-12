@@ -1,0 +1,23 @@
+{
+  "kind": "intake",
+  "model": "claude-opus-5",
+  "recorded_at": "2026-09-12T15:28:31.897802+00:00",
+  "output": {
+    "observation_updates": {
+      "appetite": "unknown",
+      "drinking": "unknown",
+      "medication_given": "unknown",
+      "incision_bleeding": "unknown",
+      "incision_swelling": "unknown",
+      "incision_discharge": "yellow",
+      "incision_open": "unknown",
+      "breathing": "unknown",
+      "demeanor": "unknown",
+      "pain_signs": "unknown",
+      "vomiting_count": null
+    },
+    "next_question": "Thank you \u2014 last check: is there any bleeding or any gap in the skin, and is Bella breathing comfortably without crying or guarding?",
+    "done": false,
+    "rationale": "Owner reported yellow discharge; combined safety-critical question asked as case is already going to the veterinary team."
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "kind": "intake",
+  "model": "claude-opus-5",
+  "recorded_at": "2026-09-12T15:28:03.575260+00:00",
+  "output": {
+    "observation_updates": {
+      "appetite": "normal",
+      "drinking": "normal",
+      "medication_given": "yes",
+      "incision_bleeding": "unknown",
+      "incision_swelling": "unknown",
+      "incision_discharge": "unknown",
+      "incision_open": "unknown",
+      "breathing": "unknown",
+      "demeanor": "unknown",
+      "pain_signs": "unknown",
+      "vomiting_count": null
+    },
+    "next_question": "That's helpful, thank you. When you look at the incision, is there any bleeding or any gap in the wound \u2014 and is Bella breathing comfortably and settling without signs of pain?",
+    "done": false,
+    "rationale": "Routine recovery reported; confirming the safety-critical wound, breathing and pain items in one combined question."
+  }
+}

@@ -1,0 +1,31 @@
+# Normalise line endings to LF, both in the repository and in the working tree,
+# on every platform.
+#
+# Every file here was authored with LF and is stored with LF. Without this,
+# core.autocrlf=true (the Windows default) rewrites them to CRLF on checkout,
+# which produces the "LF will be replaced by CRLF" warnings and makes files look
+# modified after a fresh clone on a different machine.
+* text=auto eol=lf
+
+# Explicit, so nothing depends on Git's content sniffing.
+*.py       text eol=lf
+*.md       text eol=lf
+*.html     text eol=lf
+*.yaml     text eol=lf
+*.yml      text eol=lf
+*.json     text eol=lf
+*.ini      text eol=lf
+*.txt      text eol=lf
+*.example  text eol=lf
+.gitignore text eol=lf
+
+# Never convert or diff these as text.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.webp binary
+*.ico  binary
+*.pdf  binary
+*.mp4  binary
+*.mov  binary

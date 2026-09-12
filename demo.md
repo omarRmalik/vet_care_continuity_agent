@@ -6,6 +6,14 @@ no API key, no latency surprises.
 
 The one thing to remember: **click the suggested-reply chips, don't type.**
 
+Two things that make the app look broken when it isn't:
+
+- **The chips only appear after you click "Start check-in".** Arriving on a
+  follow-up day shows nothing until a check-in is open.
+- **Suggested replies exist on days 1, 2 and 4 only.** Day 3 is not a scheduled
+  follow-up, so it is deliberately empty. Check the header chip — it always shows
+  which day you are on.
+
 ---
 
 ## 1. Pre-flight (do this ~5 minutes before recording)
@@ -192,8 +200,10 @@ findings*.
 
 ### Step 6 — Urgent stops the conversation (~35s)
 
-1. Click **Advance one day** twice (day 3, then day 4).
-2. Click **Start check-in**.
+1. Click **Advance one day** **twice** — day 3, then day 4. Day 3 is not a follow-up
+   day and offers nothing; keep going. Confirm the header reads **Day 4 · 2026-09-16**
+   before the next step.
+2. Click **Start check-in**. The chip will not appear until you do.
 3. Click the single chip: *"There's blood soaking through the bandage."*
 
 > One reply. It doesn't ask the remaining questions — an emergency terminates the
@@ -221,7 +231,8 @@ Stop recording.
 | *"Offline mode has no recorded response for that exact reply"* | You typed instead of clicking a chip | Click the chip. The session stays open — just click it and carry on. |
 | Panes stacked vertically | Window under 900px wide | Maximise, or reduce zoom. |
 | Starts mid-case | `state.json` persisted | Press **Reset**. |
-| No suggested chips | Not on day 1, 2 or 4 | **Advance one day** to the next follow-up day. |
+| No suggested chips | Check-in not started yet | Click **Start check-in** — chips are hidden until a conversation is open. |
+| Still no chips after starting | You're on day 3 (or 0) | Only days 1, 2 and 4 have suggestions. **Advance one day** and check the header chip. |
 | Nothing responds | Server stopped | Restart it (§1) and press **Reset**. |
 | `Win`+`Alt`+`R` does nothing | Game Bar capture off | `Win`+`G`, allow capture, or Settings → Gaming → Captures. |
 

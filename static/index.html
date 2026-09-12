@@ -200,6 +200,7 @@
         <div class="row">
           <button class="secondary" id="btn-start">Start check-in</button>
           <button class="secondary" id="btn-advance">Advance one day</button>
+          <span class="sub" id="day-hint" style="color:var(--warn-ink)"></span>
           <span class="sub" id="next-followup"></span>
         </div>
       </div>
@@ -266,8 +267,22 @@ function render(s) {
 function renderSession(s) {
   const sess = s.session;
   const ready = !!(s.discharge && s.discharge.paragraphs);
-  $('btn-start').disabled = !ready;
+  // Only offer a check-in on a scheduled follow-up day. Starting one on any other
+  // day opens a conversation with no protocol behind it, and advancing the clock
+  // would silently discard it.
+  const isFollowupDay = (s.followup_days || []).includes(s.case.day);
+  $('btn-start').disabled = !ready || !isFollowupDay;
   $('btn-start').textContent = sess ? `Restart day ${s.case.day} check-in` : 'Start check-in';
+  $('btn-start').title = !ready
+    ? 'Approve the discharge instructions first'
+    : !isFollowupDay
+      ? `Day ${s.case.day} is not a scheduled follow-up. Next: day ${
+          (s.followup_days || []).find(d => d > s.case.day) ?? '—'}`
+      : '';
+  $('day-hint').textContent = (ready && !isFollowupDay)
+    ? `Day ${s.case.day} is not a follow-up day — advance to day ${
+        (s.followup_days || []).find(d => d > s.case.day) ?? '—'}`
+    : '';
 
   const chat = $('chat');
   chat.classList.toggle('hidden', !sess);
